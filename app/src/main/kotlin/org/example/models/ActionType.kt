@@ -9,13 +9,13 @@ sealed class ActionType() {
   // TODO: Can we get rid of this one all together?
   abstract fun evaluate(shipment: Shipment): ActionEvaluation
 
-  fun Shipment.ensure(block: Shipment.() -> Unit): ActionEvaluation {
+  fun ActionType.ensure(shipment: Shipment, block: (Shipment) -> Unit): ActionEvaluation {
     try {
-      block()
+      block(shipment)
     } catch (e: RuleViolation) {
       return e.actionType.disallowBecause(e.reason)
     }
-    return this@ActionType.allow()
+    return allow()
   }
 
   infix fun Shipment.shouldNotBe(disallowedEventType: EventType) {

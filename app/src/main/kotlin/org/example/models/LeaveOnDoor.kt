@@ -6,9 +6,19 @@ import org.example.models.shipment.Shipment
 
 data object LeaveOnDoor : ActionType() {
   override fun evaluate(shipment: Shipment) =
-    shipment.ensure {
-      this shouldNotBe DELIVERED
-      this shouldNotHaveAdditionalService AdditionalService.LEAVE_ON_DOOR
+    ensure(shipment) {
+      it shouldNotBe DELIVERED
+      it shouldNotHaveAdditionalService AdditionalService.LEAVE_ON_DOOR
+      it mustHaveServices
+        listOf(AdditionalService.EXPRESS_DELIVERY, AdditionalService.PREMIUM_TREATMENT)
+
+      shipment mustNotExceedWeight 1000
+      shipment mustNotExceedDimensions
+        {
+          length = 100
+          width = 100
+          height = 100
+        }
 
       shouldNotBeABusinessShipment()
     }
