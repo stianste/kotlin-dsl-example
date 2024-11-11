@@ -6,25 +6,20 @@ import org.example.models.shipment.Shipment
 
 data object LeaveOnDoor : ActionType() {
   override fun evaluate(shipment: Shipment) =
-    ensure(shipment) {
+    defineRulesFor(shipment) {
       it shouldNotBe DELIVERED
       it shouldNotHaveAdditionalService AdditionalService.LEAVE_ON_DOOR
       it mustHaveServices
         listOf(AdditionalService.EXPRESS_DELIVERY, AdditionalService.PREMIUM_TREATMENT)
 
-      shipment mustNotExceedWeight 1000
-      shipment mustNotExceedDimensions
+      it mustNotExceedWeightInKg 1000.0
+      it mustNotExceedDimensions
         {
-          length = 100
-          width = 100
-          height = 100
+          length = 150.0
+          width = 100.0
+          height = 25.0
         }
 
-      shouldNotBeABusinessShipment()
+      it.shouldNotBeABusinessShipment()
     }
-
-  private fun Shipment.shouldNotBeABusinessShipment() =
-    if (this.shipmentType.code.lowercase().contains("b"))
-      this@LeaveOnDoor.failWithReason(RuleFailureReason.IsBusinessShipment)
-    else Unit
 }

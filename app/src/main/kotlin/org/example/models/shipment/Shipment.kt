@@ -5,4 +5,5 @@ data class Shipment(
   val shipmentType: ShipmentType,
   val payedForServices: List<AdditionalService>,
   val events: List<Event>,
+  val items: List<Item>,
 )

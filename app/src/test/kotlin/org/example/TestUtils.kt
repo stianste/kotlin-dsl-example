@@ -17,6 +17,9 @@ fun EvaluationResult.assertActionWasNotAllowedBecause(
   reason: RuleFailureReason,
 ) {
   assertFalse(allowedActions.contains(action))
-  assertTrue(disallowedActions[action]?.contains(reason) == true)
+  assertTrue(
+    disallowedActions[action]?.contains(reason) == true,
+    "Expected $reason, but got ${disallowedActions[action]}",
+  )
   println("Result: $this")
 }
