@@ -6,6 +6,8 @@ package org.example
 import org.example.models.shipment.Shipment
 import org.example.models.shipment.ShipmentType.DOMESTIC_BUSINESS
 
+fun List<Int>.average() = this.sum().toDouble() / this.size
+
 fun onlyRunIfBusinessShipment(shipment: Shipment, businessFunction: (Shipment) -> Unit) {
   if (shipment.shipmentType == DOMESTIC_BUSINESS) businessFunction(shipment) else Unit
 }
@@ -13,6 +15,9 @@ fun onlyRunIfBusinessShipment(shipment: Shipment, businessFunction: (Shipment) -
 fun Shipment.lambdaWithReceiver(extensionFunction: Shipment.() -> Unit) = this.extensionFunction()
 
 fun main() {
+  //  Example 0: Extension function
+  println("Average: ${listOf(1, 2, 3, 4, 5).average()}")
+
   val businessShipment = Shipment(shipmentType = DOMESTIC_BUSINESS, id = "123")
 
   //  Example 1: "ugly" lambda
