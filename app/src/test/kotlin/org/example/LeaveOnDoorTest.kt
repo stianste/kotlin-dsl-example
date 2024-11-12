@@ -66,7 +66,13 @@ internal class LeaveOnDoorTest {
   fun `it should not exceed 1000 kg`() {
     val shipment =
       shipmentValidForLeaveOnDoor.copy(
-        items = listOf(Item(weightInKg = 1001.0, dimension = Dimension()))
+        items =
+          listOf(
+            Item(
+              weightInKg = 1001.0,
+              dimension = Dimension(length = 100.0, width = 100.0, height = 25.0),
+            )
+          )
       )
     val result = RuleService.evaluate(shipment)
 
@@ -80,7 +86,13 @@ internal class LeaveOnDoorTest {
   fun `it should not exceed dimensions`() {
     val shipment =
       shipmentValidForLeaveOnDoor.copy(
-        items = listOf(Item(weightInKg = 100.0, dimension = Dimension(length = 151.0)))
+        items =
+          listOf(
+            Item(
+              weightInKg = 100.0,
+              dimension = Dimension(length = 151.0, width = 100.0, height = 25.0),
+            )
+          )
       )
     val result = RuleService.evaluate(shipment)
 
@@ -88,7 +100,7 @@ internal class LeaveOnDoorTest {
       LeaveOnDoor,
       RuleFailureReason.ShipmentTooLarge(
         Dimension(length = 150.0, width = 100.0, height = 25.0),
-        Dimension(length = 151.0),
+        Dimension(length = 151.0, width = 100.0, height = 25.0),
       ),
     )
   }

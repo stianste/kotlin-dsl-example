@@ -2,7 +2,7 @@ package org.example.models
 
 import org.example.models.ActionEvaluation.AllowedAction
 import org.example.models.shipment.AdditionalService
-import org.example.models.shipment.Dimension
+import org.example.models.shipment.DimensionBuilder
 import org.example.models.shipment.EventType
 import org.example.models.shipment.Item
 import org.example.models.shipment.Shipment
@@ -43,8 +43,8 @@ sealed class ActionType() {
     }
   }
 
-  infix fun Shipment.doesNotExceedDimensions(block: Dimension.() -> Unit) {
-    val maxDimensions = Dimension().apply(block)
+  infix fun Shipment.doesNotExceedDimensions(block: DimensionBuilder.() -> Unit) {
+    val maxDimensions = DimensionBuilder().apply(block)
     val itemWhichIsPotentiallyTooLarge =
       items.find {
         it.dimension.length > maxDimensions.length ||
@@ -53,7 +53,10 @@ sealed class ActionType() {
       }
     if (itemWhichIsPotentiallyTooLarge != null) {
       failWithReason(
-        RuleFailureReason.ShipmentTooLarge(maxDimensions, itemWhichIsPotentiallyTooLarge.dimension)
+        RuleFailureReason.ShipmentTooLarge(
+          maxDimensions.asDimension(),
+          itemWhichIsPotentiallyTooLarge.dimension,
+        )
       )
     }
   }
