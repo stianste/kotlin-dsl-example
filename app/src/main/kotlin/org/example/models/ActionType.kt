@@ -3,6 +3,7 @@ package org.example.models
 import org.example.models.ActionEvaluation.AllowedAction
 import org.example.models.shipment.AdditionalService
 import org.example.models.shipment.DimensionBuilder
+import org.example.models.shipment.Event
 import org.example.models.shipment.EventType
 import org.example.models.shipment.Item
 import org.example.models.shipment.Shipment
@@ -10,7 +11,7 @@ import org.example.models.shipment.Shipment
 sealed class ActionType() {
   abstract fun evaluate(shipment: Shipment): ActionEvaluation
 
-  fun ActionType.isAllowedWhen(shipment: Shipment, block: (Shipment) -> Unit): ActionEvaluation {
+  fun ActionType.isAllowedWhen(shipment: Shipment, block: Shipment.() -> Unit): ActionEvaluation {
     try {
       block(shipment)
     } catch (e: RuleViolation) {
@@ -19,20 +20,20 @@ sealed class ActionType() {
     return allow()
   }
 
-  infix fun Shipment.isNot(disallowedEventType: EventType) {
-    if (events.any { it.type == disallowedEventType }) {
+  infix fun List<Event>.doesNotInclude(disallowedEventType: EventType) {
+    if (any { it.type == disallowedEventType }) {
       failWithReason(RuleFailureReason.ShipmentIsAlreadyDelivered)
     }
   }
 
-  infix fun Shipment.hasAllServices(requiredServices: List<AdditionalService>) {
-    if (!payedForServices.containsAll(requiredServices)) {
+  infix fun List<AdditionalService>.includesAll(requiredServices: List<AdditionalService>) {
+    if (!containsAll(requiredServices)) {
       failWithReason(RuleFailureReason.MissingRequiredAdditionalService(requiredServices))
     }
   }
 
-  infix fun Shipment.doesNotExceedWeightInKg(maxWeightInKg: Double) {
-    val actualWeightInKg = items.sumOf(Item::weightInKg)
+  infix fun List<Item>.doesNotExceedWeightInKg(maxWeightInKg: Double) {
+    val actualWeightInKg = sumOf(Item::weightInKg)
     if (actualWeightInKg > maxWeightInKg) {
       failWithReason(
         RuleFailureReason.ShipmentTooHeavy(
@@ -43,14 +44,13 @@ sealed class ActionType() {
     }
   }
 
-  infix fun Shipment.doesNotExceedDimensions(block: DimensionBuilder.() -> Unit) {
+  infix fun List<Item>.noneExceedDimensions(block: DimensionBuilder.() -> Unit) {
     val maxDimensions = DimensionBuilder().apply(block)
-    val itemWhichIsPotentiallyTooLarge =
-      items.find {
-        it.dimension.length > maxDimensions.length ||
-          it.dimension.width > maxDimensions.width ||
-          it.dimension.height > maxDimensions.height
-      }
+    val itemWhichIsPotentiallyTooLarge = find {
+      it.dimension.length > maxDimensions.length ||
+        it.dimension.width > maxDimensions.width ||
+        it.dimension.height > maxDimensions.height
+    }
     if (itemWhichIsPotentiallyTooLarge != null) {
       failWithReason(
         RuleFailureReason.ShipmentTooLarge(
@@ -61,8 +61,8 @@ sealed class ActionType() {
     }
   }
 
-  infix fun Shipment.doesNotHaveAdditionalService(illegalService: AdditionalService) =
-    if (payedForServices.contains(illegalService))
+  infix fun List<AdditionalService>.doesNotInclude(illegalService: AdditionalService) =
+    if (contains(illegalService))
       failWithReason(RuleFailureReason.IllegalAdditionalServicePresent(illegalService))
     else Unit
 
