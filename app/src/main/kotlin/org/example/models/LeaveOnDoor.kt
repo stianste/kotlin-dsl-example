@@ -12,7 +12,7 @@ data object LeaveOnDoor : ActionType() {
       it hasAllServices
         listOf(AdditionalService.EXPRESS_DELIVERY, AdditionalService.PREMIUM_TREATMENT)
 
-      it doesNotExceedWeightInKg 1000.0
+      it doesNotExceedWeightInKg 100.0
       it doesNotExceedDimensions
         {
           length = 150.0

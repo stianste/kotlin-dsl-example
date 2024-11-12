@@ -78,7 +78,7 @@ internal class LeaveOnDoorTest {
 
     result.assertActionWasNotAllowedBecause(
       LeaveOnDoor,
-      RuleFailureReason.ShipmentTooHeavy(maxWeight = 1000.0, actualWeight = 1001.0),
+      RuleFailureReason.ShipmentTooHeavy(maxWeight = 100.0, actualWeight = 1001.0),
     )
   }
 
