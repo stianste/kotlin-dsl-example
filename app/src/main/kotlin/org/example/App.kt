@@ -3,13 +3,24 @@
  */
 package org.example
 
-class App {
-  val greeting: String
-    get() {
-      return "Hello World!"
-    }
+import org.example.models.shipment.Shipment
+import org.example.models.shipment.ShipmentType.DOMESTIC_BUSINESS
+
+fun onlyRunIfBusinessShipment(shipment: Shipment, businessFunction: (Shipment) -> Unit) {
+  if (shipment.shipmentType == DOMESTIC_BUSINESS) businessFunction(shipment) else Unit
 }
 
+fun Shipment.lambdaWithReceiver(receiver: Shipment.() -> Unit) = this.apply(receiver)
+
 fun main() {
-  println(App().greeting)
+  val businessShipment = Shipment(shipmentType = DOMESTIC_BUSINESS, id = "123")
+
+  //  Example 1: "ugly" lambda
+  onlyRunIfBusinessShipment(
+    businessShipment,
+    { shipment -> println("$shipment is a business shipment") },
+  )
+
+  // Example 2: lambda with receiver
+  businessShipment.lambdaWithReceiver { id = "456" }
 }
