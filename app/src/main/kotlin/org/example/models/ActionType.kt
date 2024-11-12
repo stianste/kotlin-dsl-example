@@ -10,7 +10,7 @@ import org.example.models.shipment.Shipment
 sealed class ActionType() {
   abstract fun evaluate(shipment: Shipment): ActionEvaluation
 
-  fun ActionType.defineRulesFor(shipment: Shipment, block: (Shipment) -> Unit): ActionEvaluation {
+  fun ActionType.isAllowedWhen(shipment: Shipment, block: (Shipment) -> Unit): ActionEvaluation {
     try {
       block(shipment)
     } catch (e: RuleViolation) {
@@ -19,19 +19,19 @@ sealed class ActionType() {
     return allow()
   }
 
-  infix fun Shipment.shouldNotBe(disallowedEventType: EventType) {
+  infix fun Shipment.isNot(disallowedEventType: EventType) {
     if (events.any { it.type == disallowedEventType }) {
       failWithReason(RuleFailureReason.ShipmentIsAlreadyDelivered)
     }
   }
 
-  infix fun Shipment.mustHaveServices(requiredServices: List<AdditionalService>) {
+  infix fun Shipment.hasAllServices(requiredServices: List<AdditionalService>) {
     if (!payedForServices.containsAll(requiredServices)) {
       failWithReason(RuleFailureReason.MissingRequiredAdditionalService(requiredServices))
     }
   }
 
-  infix fun Shipment.mustNotExceedWeightInKg(maxWeightInKg: Double) {
+  infix fun Shipment.doesNotExceedWeightInKg(maxWeightInKg: Double) {
     val actualWeightInKg = items.sumOf(Item::weightInKg)
     if (actualWeightInKg > maxWeightInKg) {
       failWithReason(
@@ -43,7 +43,7 @@ sealed class ActionType() {
     }
   }
 
-  infix fun Shipment.mustNotExceedDimensions(block: Dimension.() -> Unit) {
+  infix fun Shipment.doesNotExceedDimensions(block: Dimension.() -> Unit) {
     val maxDimensions = Dimension().apply(block)
     val itemWhichIsPotentiallyTooLarge =
       items.find {
@@ -58,12 +58,12 @@ sealed class ActionType() {
     }
   }
 
-  infix fun Shipment.shouldNotHaveAdditionalService(illegalService: AdditionalService) =
+  infix fun Shipment.doesNotHaveAdditionalService(illegalService: AdditionalService) =
     if (payedForServices.contains(illegalService))
       failWithReason(RuleFailureReason.IllegalAdditionalServicePresent(illegalService))
     else Unit
 
-  fun Shipment.shouldNotBeABusinessShipment() =
+  fun Shipment.isNotABusinessShipment() =
     if (this.shipmentType.code.lowercase().contains("b"))
       failWithReason(RuleFailureReason.IsBusinessShipment)
     else Unit
