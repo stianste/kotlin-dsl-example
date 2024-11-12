@@ -10,7 +10,7 @@ fun onlyRunIfBusinessShipment(shipment: Shipment, businessFunction: (Shipment) -
   if (shipment.shipmentType == DOMESTIC_BUSINESS) businessFunction(shipment) else Unit
 }
 
-fun Shipment.lambdaWithReceiver(receiver: Shipment.() -> Unit) = this.apply(receiver)
+fun Shipment.lambdaWithReceiver(extensionFunction: Shipment.() -> Unit) = this.extensionFunction()
 
 fun main() {
   val businessShipment = Shipment(shipmentType = DOMESTIC_BUSINESS, id = "123")
@@ -22,5 +22,5 @@ fun main() {
   )
 
   // Example 2: lambda with receiver
-  businessShipment.lambdaWithReceiver { id = "456" }
+  businessShipment.lambdaWithReceiver { println("$this is a business shipment") }
 }

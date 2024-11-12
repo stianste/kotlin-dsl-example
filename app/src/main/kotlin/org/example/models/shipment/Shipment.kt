@@ -1,7 +1,7 @@
 package org.example.models.shipment
 
 data class Shipment(
-  var id: String,
+  val id: String,
   val shipmentType: ShipmentType,
   val payedForServices: List<AdditionalService> = emptyList(),
   val events: List<Event> = emptyList(),
