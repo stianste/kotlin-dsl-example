@@ -61,8 +61,8 @@ sealed class ActionType() {
     }
   }
 
-  infix fun Shipment.doesNotHaveAdditionalService(illegalService: AdditionalService) =
-    if (payedForServices.contains(illegalService))
+  infix fun List<AdditionalService>.doesNotInclude(illegalService: AdditionalService) =
+    if (contains(illegalService))
       failWithReason(RuleFailureReason.IllegalAdditionalServicePresent(illegalService))
     else Unit
 

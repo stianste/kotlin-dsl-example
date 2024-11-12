@@ -8,7 +8,7 @@ data object LeaveOnDoor : ActionType() {
   override fun evaluate(shipment: Shipment) =
     isAllowedWhen(shipment) {
       it isNot DELIVERED
-      it doesNotHaveAdditionalService AdditionalService.LEAVE_ON_DOOR
+      it.payedForServices doesNotInclude AdditionalService.LEAVE_ON_DOOR
       it hasAllServices
         listOf(AdditionalService.EXPRESS_DELIVERY, AdditionalService.PREMIUM_TREATMENT)
 
