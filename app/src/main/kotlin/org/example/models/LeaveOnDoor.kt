@@ -7,19 +7,19 @@ import org.example.models.shipment.Shipment
 data object LeaveOnDoor : ActionType() {
   override fun evaluate(shipment: Shipment) =
     isAllowedWhen(shipment) {
-      it isNot DELIVERED
-      it.payedForServices doesNotInclude AdditionalService.LEAVE_ON_DOOR
-      it hasAllServices
+      events doesNotInclude DELIVERED
+      payedForServices doesNotInclude AdditionalService.LEAVE_ON_DOOR
+      payedForServices includesAll
         listOf(AdditionalService.EXPRESS_DELIVERY, AdditionalService.PREMIUM_TREATMENT)
 
-      it doesNotExceedWeightInKg 100.0
-      it doesNotExceedDimensions
+      items doesNotExceedWeightInKg 100.0
+      items noneExceedDimensions
         {
           length = 150.0
           width = 100.0
           height = 25.0
         }
 
-      it.isNotABusinessShipment()
+      this.isNotABusinessShipment()
     }
 }
