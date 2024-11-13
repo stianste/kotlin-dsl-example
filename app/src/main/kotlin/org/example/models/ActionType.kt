@@ -1,6 +1,7 @@
 package org.example.models
 
 import org.example.models.ActionEvaluation.AllowedAction
+import org.example.models.RuleFailureReason.*
 import org.example.models.shipment.AdditionalService
 import org.example.models.shipment.DimensionBuilder
 import org.example.models.shipment.Event
@@ -22,25 +23,20 @@ sealed class ActionType() {
 
   infix fun List<Event>.doesNotInclude(disallowedEventType: EventType) {
     if (any { it.type == disallowedEventType }) {
-      failWithReason(RuleFailureReason.ShipmentIsAlreadyDelivered)
+      failWithReason(ShipmentIsAlreadyDelivered)
     }
   }
 
   infix fun List<AdditionalService>.includesAll(requiredServices: List<AdditionalService>) {
     if (!containsAll(requiredServices)) {
-      failWithReason(RuleFailureReason.MissingRequiredAdditionalService(requiredServices))
+      failWithReason(MissingRequiredAdditionalService(requiredServices))
     }
   }
 
   infix fun List<Item>.doesNotExceedWeightInKg(maxWeightInKg: Double) {
     val actualWeightInKg = sumOf(Item::weightInKg)
     if (actualWeightInKg > maxWeightInKg) {
-      failWithReason(
-        RuleFailureReason.ShipmentTooHeavy(
-          maxWeight = maxWeightInKg,
-          actualWeight = actualWeightInKg,
-        )
-      )
+      failWithReason(ShipmentTooHeavy(maxWeight = maxWeightInKg, actualWeight = actualWeightInKg))
     }
   }
 
@@ -53,22 +49,17 @@ sealed class ActionType() {
     }
     if (itemWhichIsPotentiallyTooLarge != null) {
       failWithReason(
-        RuleFailureReason.ShipmentTooLarge(
-          maxDimensions.asDimension(),
-          itemWhichIsPotentiallyTooLarge.dimension,
-        )
+        ShipmentTooLarge(maxDimensions.asDimension(), itemWhichIsPotentiallyTooLarge.dimension)
       )
     }
   }
 
   infix fun List<AdditionalService>.doesNotInclude(illegalService: AdditionalService) =
-    if (contains(illegalService))
-      failWithReason(RuleFailureReason.IllegalAdditionalServicePresent(illegalService))
+    if (contains(illegalService)) failWithReason(IllegalAdditionalServicePresent(illegalService))
     else Unit
 
   fun Shipment.isNotABusinessShipment() =
-    if (this.shipmentType.code.lowercase().contains("b"))
-      failWithReason(RuleFailureReason.IsBusinessShipment)
+    if (this.shipmentType.code.lowercase().contains("b")) failWithReason(IsBusinessShipment)
     else Unit
 
   private fun failWithReason(reason: RuleFailureReason): Nothing {
