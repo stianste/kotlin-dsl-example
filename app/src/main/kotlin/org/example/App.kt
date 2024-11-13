@@ -6,13 +6,17 @@ package org.example
 import org.example.models.shipment.Shipment
 import org.example.models.shipment.ShipmentType.DOMESTIC_BUSINESS
 
-fun List<Int>.average() = this.sum().toDouble() / this.size
+fun List<Int>.average(): Double {
+  return this.sum().toDouble() / this.size
+}
 
 fun onlyRunIfBusinessShipment(shipment: Shipment, businessFunction: (Shipment) -> Unit) {
   if (shipment.shipmentType == DOMESTIC_BUSINESS) businessFunction(shipment) else Unit
 }
 
-fun Shipment.lambdaWithReceiver(extensionFunction: Shipment.() -> Unit) = this.extensionFunction()
+fun Shipment.lambdaWithReceiver(extensionFunction: Shipment.() -> Unit) {
+  this.extensionFunction()
+}
 
 fun main() {
   //  Example 0: Extension function
