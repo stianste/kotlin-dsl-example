@@ -1,6 +1,8 @@
 package org.example.models
 
-import org.example.models.shipment.AdditionalService
+import org.example.models.shipment.AdditionalService.EXPRESS_DELIVERY
+import org.example.models.shipment.AdditionalService.LEAVE_ON_DOOR
+import org.example.models.shipment.AdditionalService.PREMIUM_TREATMENT
 import org.example.models.shipment.EventType.DELIVERED
 import org.example.models.shipment.Shipment
 
@@ -8,9 +10,8 @@ data object LeaveOnDoor : ActionType() {
   override fun evaluate(shipment: Shipment) =
     isAllowedWhen(shipment) {
       events doesNotInclude DELIVERED
-      payedForServices doesNotInclude AdditionalService.LEAVE_ON_DOOR
-      payedForServices includesAll
-        listOf(AdditionalService.EXPRESS_DELIVERY, AdditionalService.PREMIUM_TREATMENT)
+      payedForServices doesNotInclude LEAVE_ON_DOOR
+      payedForServices includesAll listOf(EXPRESS_DELIVERY, PREMIUM_TREATMENT)
 
       items doesNotExceedWeightInKg 100.0
       items noneExceedDimensions
