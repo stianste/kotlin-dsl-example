@@ -6,8 +6,8 @@ package org.example
 import org.example.models.shipment.Shipment
 import org.example.models.shipment.ShipmentType.DOMESTIC_BUSINESS
 
-fun List<Int>.average(): Double {
-  return this.sum().toDouble() / this.size
+fun List<Int>.isTooLarge(): Boolean {
+  return this.sum().toDouble() > this.size
 }
 
 fun onlyRunIfBusinessShipment(shipment: Shipment, businessFunction: (Shipment) -> Unit) {
@@ -20,7 +20,7 @@ fun Shipment.lambdaWithReceiver(extensionFunction: Shipment.() -> Unit) {
 
 fun main() {
   //  Example 0: Extension function
-  println("Average: ${listOf(1, 2, 3, 4, 5).average()}")
+  println("Is too large: ${listOf(1, 2, 3, 4, 5).isTooLarge()}")
 
   val businessShipment = Shipment(shipmentType = DOMESTIC_BUSINESS, id = "123")
 
