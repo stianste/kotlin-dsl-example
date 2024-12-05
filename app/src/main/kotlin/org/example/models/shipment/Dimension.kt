@@ -15,3 +15,5 @@ data class DimensionBuilder(
     return Dimension(width = width, height = height, length = length)
   }
 }
+
+data class LengthBuilder(var length: Double = -1.0) {}

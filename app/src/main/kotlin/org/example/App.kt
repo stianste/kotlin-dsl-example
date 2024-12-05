@@ -7,7 +7,7 @@ import org.example.models.shipment.Shipment
 import org.example.models.shipment.ShipmentType.DOMESTIC_BUSINESS
 
 fun List<Int>.isTooLarge(): Boolean {
-  return this.sum().toDouble() > this.size
+  return sum().toDouble() > size
 }
 
 fun onlyRunIfBusinessShipment(shipment: Shipment, businessFunction: (Shipment) -> Unit) {
@@ -25,10 +25,7 @@ fun main() {
   val businessShipment = Shipment(shipmentType = DOMESTIC_BUSINESS, id = "123")
 
   //  Example 1: "ugly" lambda
-  onlyRunIfBusinessShipment(
-    businessShipment,
-    { shipment -> println("$shipment is a business shipment") },
-  )
+  onlyRunIfBusinessShipment(businessShipment) { println("$it is a business shipment") }
 
   // Example 2: lambda with receiver
   businessShipment.lambdaWithReceiver { println("$this is a business shipment") }

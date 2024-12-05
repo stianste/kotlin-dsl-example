@@ -2,6 +2,7 @@ package org.example.models
 
 import org.example.models.shipment.AdditionalService
 import org.example.models.shipment.Dimension
+import org.example.models.shipment.DimensionBuilder
 
 sealed class RuleFailureReason {
   data object ShipmentIsAlreadyDelivered : RuleFailureReason()
@@ -16,8 +17,10 @@ sealed class RuleFailureReason {
   data class ShipmentTooHeavy(val maxWeight: Double, val actualWeight: Double) :
     RuleFailureReason()
 
-  data class ShipmentTooLarge(val maxDimensions: Dimension, val actualDimensions: Dimension) :
-    RuleFailureReason()
+  data class ShipmentTooLarge(
+    val maxDimensions: DimensionBuilder,
+    val actualDimensions: Dimension,
+  ) : RuleFailureReason()
 
   data object IsBusinessShipment : RuleFailureReason()
 }

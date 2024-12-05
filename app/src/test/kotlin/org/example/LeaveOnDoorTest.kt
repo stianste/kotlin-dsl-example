@@ -13,6 +13,7 @@ import org.example.models.shipment.AdditionalService.EXPRESS_DELIVERY
 import org.example.models.shipment.AdditionalService.LEAVE_ON_DOOR
 import org.example.models.shipment.AdditionalService.PREMIUM_TREATMENT
 import org.example.models.shipment.Dimension
+import org.example.models.shipment.DimensionBuilder
 import org.example.models.shipment.Event
 import org.example.models.shipment.EventType.DELIVERED
 import org.example.models.shipment.Item
@@ -99,7 +100,7 @@ internal class LeaveOnDoorTest {
     result.assertActionWasNotAllowedBecause(
       LeaveOnDoor,
       RuleFailureReason.ShipmentTooLarge(
-        Dimension(length = 150.0, width = 100.0, height = 25.0),
+        DimensionBuilder(length = 150.0, width = 100.0, height = 25.0),
         Dimension(length = 151.0, width = 100.0, height = 25.0),
       ),
     )

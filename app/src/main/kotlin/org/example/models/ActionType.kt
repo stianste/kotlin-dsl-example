@@ -12,9 +12,9 @@ import org.example.models.shipment.Shipment
 sealed class ActionType() {
   abstract fun evaluate(shipment: Shipment): ActionEvaluation
 
-  fun ActionType.isAllowedWhen(shipment: Shipment, block: Shipment.() -> Unit): ActionEvaluation {
+  fun Shipment.isAllowedWhen(block: Shipment.() -> Unit): ActionEvaluation {
     try {
-      block(shipment)
+      block()
     } catch (e: RuleViolation) {
       return e.actionType.disallowBecause(e.reason)
     }
@@ -48,9 +48,7 @@ sealed class ActionType() {
         it.dimension.height > maxDimensions.height
     }
     if (itemWhichIsPotentiallyTooLarge != null) {
-      failWithReason(
-        ShipmentTooLarge(maxDimensions.asDimension(), itemWhichIsPotentiallyTooLarge.dimension)
-      )
+      failWithReason(ShipmentTooLarge(maxDimensions, itemWhichIsPotentiallyTooLarge.dimension))
     }
   }
 
@@ -58,7 +56,7 @@ sealed class ActionType() {
     if (contains(illegalService)) failWithReason(IllegalAdditionalServicePresent(illegalService))
     else Unit
 
-  fun Shipment.isNotABusinessShipment() =
+  fun Shipment.mustNotBeABusinessShipment() =
     if (this.shipmentType.code.lowercase().contains("b")) failWithReason(IsBusinessShipment)
     else Unit
 

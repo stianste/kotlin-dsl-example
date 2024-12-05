@@ -8,7 +8,7 @@ import org.example.models.shipment.Shipment
 
 data object LeaveOnDoor : ActionType() {
   override fun evaluate(shipment: Shipment) =
-    isAllowedWhen(shipment) {
+    shipment.isAllowedWhen {
       events doesNotInclude DELIVERED
       payedForServices doesNotInclude LEAVE_ON_DOOR
       payedForServices includesAll listOf(EXPRESS_DELIVERY, PREMIUM_TREATMENT)
@@ -21,6 +21,6 @@ data object LeaveOnDoor : ActionType() {
           height = 25.0
         }
 
-      this.isNotABusinessShipment()
+      this.mustNotBeABusinessShipment()
     }
 }
