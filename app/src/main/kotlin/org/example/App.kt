@@ -6,27 +6,77 @@ package org.example
 import org.example.models.shipment.Shipment
 import org.example.models.shipment.ShipmentType.DOMESTIC_BUSINESS
 
-fun List<Int>.isTooLarge(): Boolean {
-  return sum().toDouble() > size
-}
-
-fun onlyRunIfBusinessShipment(shipment: Shipment, businessFunction: (Shipment) -> Unit) {
-  if (shipment.shipmentType == DOMESTIC_BUSINESS) businessFunction(shipment) else Unit
-}
-
-fun Shipment.lambdaWithReceiver(extensionFunction: Shipment.() -> Unit) {
-  this.extensionFunction()
-}
-
 fun main() {
-  //  Example 0: Extension function
-  println("Is too large: ${listOf(1, 2, 3, 4, 5).isTooLarge()}")
+  /**
+   * ***
+   * 1. Extension functions ****
+   */
+  fun sumIsGreaterThan(inputList: List<Int>, n: Int): Boolean {
+    return inputList.sum() > n
+  }
 
-  val businessShipment = Shipment(shipmentType = DOMESTIC_BUSINESS, id = "123")
+  val list = listOf(1, 2, 3, 4, 5)
+  val listIsTooLarge = sumIsGreaterThan(list, 10)
 
-  //  Example 1: "ugly" lambda
-  onlyRunIfBusinessShipment(businessShipment) { println("$it is a business shipment") }
+  //  fun List<Int>.sumIsGreaterThan(n: Int): Boolean {
+  //    return sum() > n
+  //  }
+  //  val listIsTooLargeWithExtensionFunction = list.sumIsGreaterThan(10)
 
-  // Example 2: lambda with receiver
-  businessShipment.lambdaWithReceiver { println("$this is a business shipment") }
+  /**
+   * ***
+   * 2. Infix function ****
+   */
+
+  // Without infix
+  fun isEqualTo(first: String, second: String): Boolean {
+    return first == second
+  }
+
+  infix fun String.isEqualTo(other: String): Boolean {
+    return this == other
+  }
+
+  val isEqual = "Hello" isEqualTo "Hello"
+
+  /**
+   * ***
+   * 3. Higher order functions ****
+   */
+  fun higherOrderFunction(
+    firstArgument: String = "default",
+    functionTakenInAsArgument: (String) -> Unit,
+  ) {
+    println("Going to run the function passed in as an argument")
+    functionTakenInAsArgument(firstArgument)
+  }
+
+  // function(arg1, arg2)
+  higherOrderFunction("Argument to be printed", { println("Ugly with extra parentheses func $it") })
+
+  // function(arg1) { arg2 }
+  higherOrderFunction("Argument to be printed") { println("Pretty func $it") }
+
+  // function { arg1 }
+  higherOrderFunction { println("Pretty func $it") }
+
+  /**
+   * ***
+   * 4. Lambda with receiver ****
+   */
+  val shipment = Shipment(shipmentType = DOMESTIC_BUSINESS, id = "123")
+
+  // Without
+  fun doSomethingToShipment(shipment: Shipment, modificationFunction: (Shipment) -> Unit) {
+    modificationFunction(shipment)
+  }
+
+  doSomethingToShipment(shipment) { println("$shipment is a business shipment") }
+
+  // With
+  fun Shipment.doSomethingToShipmentWithReceiver(modificationFunction: Shipment.() -> Unit) {
+    modificationFunction()
+  }
+
+  shipment.doSomethingToShipmentWithReceiver { println("$this is a business shipment") }
 }
