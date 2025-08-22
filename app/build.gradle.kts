@@ -14,23 +14,24 @@ plugins {
 }
 
 repositories {
-  // Use Maven Central for resolving dependencies.
+  clear()
   mavenCentral()
 }
 
 dependencies {
   // This dependency is used by the application.
   implementation(libs.guava)
+  implementation("org.jetbrains.kotlin:kotlin-stdlib:2.0.10")
 }
 
 testing {
   suites {
     // Configure the built-in test suite
     val test by
-      getting(JvmTestSuite::class) {
-        // Use Kotlin Test test framework
-        useKotlinTest("2.0.0")
-      }
+    getting(JvmTestSuite::class) {
+      // Use Kotlin Test test framework
+      useKotlinTest("2.0.0")
+    }
   }
 }
 
