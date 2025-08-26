@@ -1,30 +1,20 @@
 package org.example
 
-import org.example.dsl.configurePerson
-import org.example.models.shipment.Shipment
-import org.example.models.shipment.ShipmentType.DOMESTIC_BUSINESS
-
 fun main() {
   // Extension functions
-  "john doe".capitalizeWordsExtenisionFn()
+  "john doe".capitalizeWordsExtensionFn()
 
   // Infix functions
   "Charlie" befriends "Dana"
 
   // Higher-order functions
-  repeatThreeTimes {
-    surroundWithStars {
-      surroundWithDashes {
-        println("Less clutter!")
-      }
-    }
-  }
+  repeatThreeTimes { surroundWithStars { surroundWithDashes { println("Less clutter!") } } }
 
   // Lambdas with receiver
-  val alice = configurePerson {
+  val alice = configureCitizen {
     name = "Alice"
     age = 30
-    configureAddress {
+    address {
       street = "Main St. 123"
       city = "Oslo"
     }

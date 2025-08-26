@@ -17,23 +17,11 @@ fun repeatThreeTimes(action: () -> Unit) {
 }
 
 fun main() {
-  repeat(2, { println("Hello from inside parentheses!") })
-  repeat(2) { println("Hello from outside parentheses!") }
+  surroundWithStars { println("Hello from inside parentheses!") }
 
-  println("\nComposed example with parentheses:")
-  repeatThreeTimes({
-    surroundWithStars({
-      surroundWithDashes({
-        println("Harder to read")
-      })
-    })
-  })
+  surroundWithStars { println("Hello from outside parentheses!") }
 
-  repeatThreeTimes {
-    surroundWithStars {
-      surroundWithDashes {
-        println("Less clutter!")
-      }
-    }
-  }
+  repeatThreeTimes({ surroundWithStars({ surroundWithDashes({ println("Harder to read") }) }) })
+
+  repeatThreeTimes { surroundWithStars { surroundWithDashes { println("Less clutter!") } } }
 }

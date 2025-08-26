@@ -1,7 +1,7 @@
 package org.example
 
 class Person(val name: String) {
-  infix fun befriends(other: Person): String = "$name is friends with ${other.name}"
+  infix fun befriends(other: Person): String = "${this.name} is friends with ${other.name}"
 }
 
 infix fun String.befriends(other: String): String = "$this is friends with $other"
