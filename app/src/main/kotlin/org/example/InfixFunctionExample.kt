@@ -9,11 +9,11 @@ infix fun String.befriends(other: String): String = "$this is friends with $othe
 fun main() {
   val alice = Person("Alice")
   val bob = Person("Bob")
-  val friendship = alice befriends bob // "Alice is friends with Bob"
-  println(friendship)
+
+  alice befriends bob
 
   val name1 = "Charlie"
   val name2 = "Dana"
-  val friendship2 = name1 befriends name2 // "Charlie is friends with Dana"
-  println(friendship2)
+
+  name1 befriends name2
 }
