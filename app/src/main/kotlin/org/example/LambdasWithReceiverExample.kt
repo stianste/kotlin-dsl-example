@@ -1,9 +1,9 @@
 package org.example
 
 fun configureCitizen(block: Citizen.() -> Unit): Citizen {
-  val person = Citizen()
-  person.block()
-  return person
+  val citizen = Citizen()
+  citizen.block()
+  return citizen
 }
 
 fun Citizen.address(block: Address.() -> Unit) {

@@ -1,5 +1,6 @@
 package org.example
 
+// Capitalize each word in a string
 fun capitalizeWords(str: String): String =
   str.split(" ").joinToString(" ") { it.replaceFirstChar { c -> c.uppercaseChar() } }
 

@@ -6,9 +6,9 @@ data class Address(var street: String = "", var city: String = "")
 
 // For contrast: function that takes a regular lambda
 fun configureCitizenRegular(block: (Citizen) -> Unit): Citizen {
-  val person = Citizen()
-  block(person)
-  return person
+  val citizen = Citizen()
+  block(citizen)
+  return citizen
 }
 
 fun Citizen.configureAddressRegular(block: (Address) -> Unit) {

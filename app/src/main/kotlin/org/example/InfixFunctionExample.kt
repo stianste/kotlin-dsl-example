@@ -12,8 +12,8 @@ fun main() {
 
   alice befriends bob
 
-  val name1 = "Charlie"
-  val name2 = "Dana"
+  val charlie = "Charlie"
+  val dana = "Dana"
 
-  name1 befriends name2
+  charlie befriends dana
 }
